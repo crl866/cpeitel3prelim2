@@ -1,41 +1,48 @@
-import { useState } from 'react'
-import { skillList } from './data.js'
-import './App.css'
+import React, { useMemo, useState } from "react";
+import { zeroTalentItems } from "./data/zeroTalent";
 
-function App() {
+export default function App() {
+  const fullName = "Carl Anton David";
+
+  const items = useMemo(() => zeroTalentItems, []);
   const [index, setIndex] = useState(0);
 
-  const handleNext = () => {
-    setIndex((prevIndex) => (prevIndex === skillList.length - 1 ? 0 : prevIndex + 1));
-  };
+  const current = items[index];
 
-  const handleBack = () => {
-    setIndex((prevIndex) => (prevIndex === 0 ? skillList.length - 1 : prevIndex - 1));
-  };
-
-  const skill = skillList[index];
+  const goPrev = () => setIndex((i) => (i === 0 ? items.length - 1 : i - 1));
+  const goNext = () => setIndex((i) => (i === items.length - 1 ? 0 : i + 1));
 
   return (
-    <div className="wrapper-container">
-      <div className="info-box">
-        <header className="box-header">
-          <h1>10 Things that Require Zero Talent</h1>
-          <p className="writer-name">by Carl Anton David</p>
+    <div className="page">
+      <div className="card">
+        <header className="header">
+          <h1 className="title">10 Things that Require Zero Talent</h1>
+          <p className="subtitle">by {fullName}</p>
         </header>
 
-        <main className="box-body">
-          <img src={skill.url} alt={skill.alt} className="info-image" />
-          <h2 className="info-title">{skill.thing}</h2>
-          <p className="info-description">{skill.detail}</p>
-        </main>
+        <div className="imageWrap">
+          <img className="image" src={current.url} alt={current.alt} />
+        </div>
 
-        <footer className="box-footer">
-          <button className="action-button" onClick={handleBack}>BACK</button>
-          <button className="action-button" onClick={handleNext}>NEXT</button>
+        <section className="content">
+          <h2 className="skill">{current.thing}</h2>
+          <p className="desc">{current.detail}</p>
+        </section>
+
+        <footer className="footer">
+          <button className="btn" type="button" onClick={goPrev}>
+            BACK
+          </button>
+
+          <div className="counter">
+            {index + 1} / {items.length}
+          </div>
+
+          <button className="btn" type="button" onClick={goNext}>
+            NEXT
+          </button>
         </footer>
       </div>
     </div>
-  )
+  );
 }
-
-export default App
